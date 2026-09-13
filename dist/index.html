@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>奶蛙量产工厂</title>
+    <meta
+      name="description"
+      content="围绕固定奶蛙角色 DNA 的 AI 二创配方与量产工作台。"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b1b17'/%3E%3Ccircle cx='22' cy='23' r='11' fill='%23ffd84d'/%3E%3Ccircle cx='42' cy='23' r='11' fill='%23ffd84d'/%3E%3Ccircle cx='32' cy='36' r='18' fill='%23ffd84d'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%231b1b17'/%3E%3Ccircle cx='39' cy='25' r='3' fill='%231b1b17'/%3E%3Cpath d='M23 38q9 8 18 0' fill='none' stroke='%231b1b17' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">AI Character Remix Factory</p>
+          <h1>奶蛙量产工厂</h1>
+        </div>
+        <div class="topbar__stats" aria-label="当前配方指标">
+          <span><strong id="recipeCount">0</strong> 配方</span>
+          <span><strong id="downloadCount">0</strong> 下载</span>
+          <span><strong id="remixCount">0</strong> Remix</span>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="奶蛙量产工作台">
+        <aside class="panel controls-panel" aria-label="配方选择">
+          <div class="panel__heading">
+            <p class="eyebrow">Recipe</p>
+            <h2>装配二创配方</h2>
+          </div>
+
+          <div class="control-group">
+            <div class="group-title">
+              <span>职业</span>
+              <small id="roleValue">CEO</small>
+            </div>
+            <div class="option-grid" data-options="role"></div>
+          </div>
+
+          <div class="control-group">
+            <div class="group-title">
+              <span>衣服</span>
+              <small id="outfitValue">黑色西装</small>
+            </div>
+            <div class="option-grid option-grid--dense" data-options="outfit"></div>
+          </div>
+
+          <div class="control-group">
+            <div class="group-title">
+              <span>配饰</span>
+              <small id="accessoryValue">墨镜</small>
+            </div>
+            <div class="option-grid option-grid--dense" data-options="accessory"></div>
+          </div>
+
+          <div class="control-group">
+            <div class="group-title">
+              <span>场景</span>
+              <small id="sceneValue">高级办公室</small>
+            </div>
+            <div class="option-grid option-grid--dense" data-options="scene"></div>
+          </div>
+
+          <div class="control-row">
+            <label class="select-label" for="poseSelect">
+              动作
+              <select id="poseSelect"></select>
+            </label>
+            <label class="select-label" for="expressionSelect">
+              表情
+              <select id="expressionSelect"></select>
+            </label>
+          </div>
+
+          <div class="range-box">
+            <div class="group-title">
+              <span>抽象程度</span>
+              <small><span id="crazyValue">70</span>/100</small>
+            </div>
+            <input id="crazyLevel" type="range" min="0" max="100" value="70" />
+            <div class="range-legend" aria-hidden="true">
+              <span>稳</span>
+              <span>梗</span>
+              <span>飞</span>
+            </div>
+          </div>
+        </aside>
+
+        <section class="stage" aria-label="角色预览与 Prompt">
+          <div class="preview-card">
+            <div class="factory-badge">
+              <span class="status-dot"></span>
+              角色锁定
+            </div>
+            <div class="frog-stage" id="frogStage">
+              <img
+                src="./assets/naiwa-base.png"
+                alt="黄色圆肚子奶蛙角色参考图"
+                class="frog-image"
+              />
+              <div class="costume-band" aria-hidden="true"></div>
+            </div>
+            <div class="dna-strip" aria-label="奶蛙 DNA">
+              <span>黄皮肤</span>
+              <span>大圆肚</span>
+              <span>短四肢</span>
+              <span>小圆眼</span>
+            </div>
+          </div>
+
+          <div class="compiler-card">
+            <div class="panel__heading panel__heading--row">
+              <div>
+                <p class="eyebrow">Prompt Compiler</p>
+                <h2>当前编译结果</h2>
+              </div>
+              <button class="icon-button" id="copyPrompt" type="button" aria-label="复制 Prompt">
+                Copy
+              </button>
+            </div>
+            <pre id="promptOutput"></pre>
+          </div>
+        </section>
+
+        <aside class="panel production-panel" aria-label="量产任务">
+          <div class="panel__heading">
+            <p class="eyebrow">Production Job</p>
+            <h2>黑帮奶蛙 · 4 张</h2>
+          </div>
+
+          <button class="primary-button" id="startProduction" type="button">
+            开始量产
+          </button>
+
+          <div class="job-card" id="jobCard">
+            <div class="job-card__top">
+              <strong id="jobName">等待投产</strong>
+              <span id="jobPercent">0%</span>
+            </div>
+            <div class="progress-track" aria-label="生产进度">
+              <div id="progressBar"></div>
+            </div>
+            <ol class="steps" id="steps"></ol>
+          </div>
+
+          <div class="recipe-card">
+            <div class="panel__heading panel__heading--row">
+              <div>
+                <p class="eyebrow">Saved Recipe</p>
+                <h2>最近配方</h2>
+              </div>
+              <button class="ghost-button" id="saveRecipe" type="button">保存</button>
+            </div>
+            <div id="savedRecipes" class="saved-recipes"></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="results-section" aria-label="生成结果">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Results</p>
+            <h2>本次量产结果</h2>
+          </div>
+          <p id="resultHint">选择配方后开始量产，完成后会出现 4 张可下载结果。</p>
+        </div>
+        <div class="result-grid" id="resultGrid"></div>
+      </section>
+    </main>
+
+    <template id="resultTemplate">
+      <article class="result-card">
+        <div class="result-art">
+          <img src="./assets/naiwa-base.png" alt="" />
+          <div class="costume-band" aria-hidden="true"></div>
+          <span class="variant-pill"></span>
+        </div>
+        <div class="result-card__body">
+          <h3></h3>
+          <p></p>
+          <div class="result-actions">
+            <button type="button" data-action="download">下载</button>
+            <button type="button" data-action="favorite">收藏</button>
+            <button type="button" data-action="remix">复制这只蛙</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
