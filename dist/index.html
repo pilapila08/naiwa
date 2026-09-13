@@ -35,6 +35,9 @@
             <p class="eyebrow">Recipe</p>
             <h2>装配二创配方</h2>
           </div>
+          <button class="random-button" id="randomRecipe" type="button">
+            随机奶蛙
+          </button>
 
           <div class="control-group">
             <div class="group-title">
@@ -58,14 +61,6 @@
               <small id="accessoryValue">墨镜</small>
             </div>
             <div class="option-grid option-grid--dense" data-options="accessory"></div>
-          </div>
-
-          <div class="control-group">
-            <div class="group-title">
-              <span>场景</span>
-              <small id="sceneValue">高级办公室</small>
-            </div>
-            <div class="option-grid option-grid--dense" data-options="scene"></div>
           </div>
 
           <div class="control-row">
@@ -105,7 +100,6 @@
                 alt="黄色长圆身体奶蛙角色基底正面图"
                 class="frog-image"
               />
-              <div class="costume-band" aria-hidden="true"></div>
             </div>
             <div class="dna-strip" aria-label="奶蛙 DNA">
               <span>黄皮肤</span>
@@ -130,6 +124,23 @@
               </button>
             </div>
             <pre id="promptOutput"></pre>
+          </div>
+
+          <div class="api-card">
+            <div class="panel__heading">
+              <p class="eyebrow">Image API</p>
+              <h2>接入方式</h2>
+            </div>
+            <div class="api-flow">
+              <span>前端 Recipe</span>
+              <span>FastAPI 任务</span>
+              <span>Prompt Compiler</span>
+              <span>生图 Provider</span>
+            </div>
+            <p>
+              前端不要放 API Key，只把配方发到后端。后端读取角色基底图和编译后的 Prompt，
+              调用图片生成或图片编辑接口，拿到图片后存到 R2/S3，再把 URL 返回给结果卡。
+            </p>
           </div>
         </section>
 
@@ -173,7 +184,7 @@
             <p class="eyebrow">Results</p>
             <h2>本次量产结果</h2>
           </div>
-          <p id="resultHint">选择配方后开始量产，完成后会出现 4 张可下载结果。</p>
+          <p id="resultHint">选择配方或随机奶蛙后开始量产，完成后会出现 4 张可下载结果。</p>
         </div>
         <div class="result-grid" id="resultGrid"></div>
       </section>
@@ -183,7 +194,6 @@
       <article class="result-card">
         <div class="result-art">
           <img src="./assets/naiwa-base.png" alt="" />
-          <div class="costume-band" aria-hidden="true"></div>
           <span class="variant-pill"></span>
         </div>
         <div class="result-card__body">

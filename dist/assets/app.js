@@ -29,18 +29,6 @@ const catalog = {
     { id: "helmet", name: "安全帽", prompt: "yellow safety helmet" },
     { id: "none", name: "无配饰", prompt: "no accessory" }
   ],
-  scene: [
-    { id: "luxury_office", name: "高级办公室", bg: "linear-gradient(145deg, #f5e7bc, #8fb6d9)", prompt: "luxury corporate office" },
-    { id: "internet_cafe", name: "网吧", bg: "linear-gradient(145deg, #1e2430, #6ab3c9)", prompt: "neon internet cafe" },
-    { id: "moon", name: "月球", bg: "linear-gradient(145deg, #202334, #cfd6de)", prompt: "quiet moon surface" },
-    { id: "subway", name: "地铁", bg: "linear-gradient(145deg, #d8dad8, #f6c945)", prompt: "crowded city subway platform" },
-    { id: "gym", name: "健身房", bg: "linear-gradient(145deg, #e86f59, #2b2a25)", prompt: "bright workout gym" },
-    { id: "palace", name: "古代皇宫", bg: "linear-gradient(145deg, #c33535, #f2c36b)", prompt: "ancient imperial palace" },
-    { id: "hospital", name: "医院", bg: "linear-gradient(145deg, #e7f7f2, #87a8d8)", prompt: "clean hospital corridor" },
-    { id: "street", name: "街道", bg: "linear-gradient(145deg, #f0d5a1, #6e7b6e)", prompt: "busy meme city street" },
-    { id: "store", name: "便利店", bg: "linear-gradient(145deg, #fff2a8, #e86f59)", prompt: "late night convenience store" },
-    { id: "construction_site", name: "工地", bg: "linear-gradient(145deg, #f28d35, #72756f)", prompt: "construction site with scaffolding" }
-  ],
   pose: [
     { id: "hands_on_waist", name: "叉腰", prompt: "hands on waist" },
     { id: "hands_in_pocket", name: "插兜", prompt: "hands in pocket" },
@@ -80,7 +68,6 @@ const state = {
   role: "ceo",
   outfit: "black_suit",
   accessory: "sunglasses",
-  scene: "luxury_office",
   pose: "hands_on_waist",
   expression: "smug",
   crazyLevel: 70,
@@ -104,7 +91,6 @@ function currentRecipe() {
     role: state.role,
     outfit: state.outfit,
     accessory: state.accessory,
-    scene: state.scene,
     pose: state.pose,
     expression: state.expression,
     style: "funny_meme_character",
@@ -122,7 +108,6 @@ function compilePrompt(recipe = currentRecipe()) {
   const role = getItem("role", recipe.role);
   const outfit = getItem("outfit", recipe.outfit);
   const accessory = getItem("accessory", recipe.accessory);
-  const scene = getItem("scene", recipe.scene);
   const pose = getItem("pose", recipe.pose);
   const expression = getItem("expression", recipe.expression);
 
@@ -152,9 +137,6 @@ ${pose.prompt}.
 Expression:
 ${expression.prompt}.
 
-Scene:
-${scene.prompt}.
-
 Style control:
 ${crazyPrompt(recipe.crazy_level)}.
 
@@ -170,7 +152,7 @@ no watermark.`;
 }
 
 function labelRecipe(recipe = currentRecipe()) {
-  return `${getItem("scene", recipe.scene).name}${getItem("role", recipe.role).name}奶蛙`;
+  return `${getItem("role", recipe.role).name}${getItem("outfit", recipe.outfit).name}奶蛙`;
 }
 
 function renderOptions(type) {
@@ -257,8 +239,7 @@ function renderResults() {
   const template = $("#resultTemplate");
   state.results.forEach((result, index) => {
     const node = template.content.firstElementChild.cloneNode(true);
-    node.style.setProperty("--scene-bg", getItem("scene", result.recipe.scene).bg);
-    node.style.setProperty("--costume", getItem("outfit", result.recipe.outfit).color);
+    node.style.setProperty("--result-accent", getItem("outfit", result.recipe.outfit).color);
     node.querySelector(".variant-pill").textContent = `N-${String(index + 1).padStart(2, "0")}`;
     node.querySelector("h3").textContent = result.title;
     node.querySelector("p").textContent = result.caption;
@@ -280,17 +261,15 @@ function renderResults() {
 }
 
 function render() {
-  ["role", "outfit", "accessory", "scene"].forEach(renderOptions);
+  ["role", "outfit", "accessory"].forEach(renderOptions);
   renderSelect("pose", "#poseSelect");
   renderSelect("expression", "#expressionSelect");
   $("#roleValue").textContent = getItem("role").name;
   $("#outfitValue").textContent = getItem("outfit").name;
   $("#accessoryValue").textContent = getItem("accessory").name;
-  $("#sceneValue").textContent = getItem("scene").name;
   $("#crazyValue").textContent = state.crazyLevel;
   $("#promptOutput").textContent = compilePrompt();
-  $("#frogStage").style.setProperty("--costume", getItem("outfit").color);
-  $(".preview-card").style.background = `radial-gradient(circle at 22% 18%, rgba(246, 201, 69, 0.26), transparent 28%), radial-gradient(circle at 78% 24%, rgba(135, 168, 216, 0.24), transparent 32%), ${getItem("scene").bg}`;
+  $(".preview-card").style.setProperty("--preview-accent", getItem("outfit").color);
   $(".production-panel h2").textContent = `${labelRecipe()} · 4 张`;
   $("#recipeCount").textContent = state.recipes.length;
   $("#downloadCount").textContent = state.downloads;
@@ -303,7 +282,6 @@ function applyRecipe(recipe) {
   state.role = recipe.role;
   state.outfit = recipe.outfit;
   state.accessory = recipe.accessory;
-  state.scene = recipe.scene;
   state.pose = recipe.pose;
   state.expression = recipe.expression;
   state.crazyLevel = recipe.crazy_level;
@@ -316,6 +294,23 @@ function saveRecipe(recipe = currentRecipe()) {
   state.recipes = [stamped, ...state.recipes.filter((item) => JSON.stringify({ ...item, saved_at: undefined }) !== JSON.stringify({ ...stamped, saved_at: undefined }))].slice(0, 8);
   localStorage.setItem("naiwa_recipes", JSON.stringify(state.recipes));
   render();
+}
+
+function pickRandom(type) {
+  const items = catalog[type];
+  return items[Math.floor(Math.random() * items.length)].id;
+}
+
+function randomizeRecipe() {
+  state.role = pickRandom("role");
+  state.outfit = pickRandom("outfit");
+  state.accessory = pickRandom("accessory");
+  state.pose = pickRandom("pose");
+  state.expression = pickRandom("expression");
+  state.crazyLevel = Math.floor(15 + Math.random() * 86);
+  $("#crazyLevel").value = state.crazyLevel;
+  render();
+  toast("已随机装配一只奶蛙");
 }
 
 function startProduction() {
@@ -374,7 +369,6 @@ function downloadResult(result, index) {
   const ctx = canvas.getContext("2d");
   const image = new Image();
   image.onload = () => {
-    const scene = getItem("scene", result.recipe.scene);
     const outfit = getItem("outfit", result.recipe.outfit);
     const gradient = ctx.createLinearGradient(0, 0, 1080, 1080);
     gradient.addColorStop(0, "#fff4bb");
@@ -394,7 +388,7 @@ function downloadResult(result, index) {
     ctx.font = "700 38px sans-serif";
     ctx.fillText(result.title, 104, 968, 820);
     ctx.font = "500 24px sans-serif";
-    ctx.fillText(scene.name, 104, 1000, 680);
+    ctx.fillText(`${getItem("pose", result.recipe.pose).name} · ${getItem("expression", result.recipe.expression).name}`, 104, 1000, 680);
     canvas.toBlob((blob) => {
       if (!blob) {
         toast("下载生成失败，请再试一次");
@@ -436,7 +430,6 @@ function registerWebMcpTools() {
       role: { type: "string" },
       outfit: { type: "string" },
       accessory: { type: "string" },
-      scene: { type: "string" },
       pose: { type: "string" },
       expression: { type: "string" },
       crazy_level: { type: "number", minimum: 0, maximum: 100 }
@@ -463,12 +456,12 @@ function registerWebMcpTools() {
       {
         name: "configure_recipe",
         title: "Configure Naiwa recipe",
-        description: "Update the visible recipe controls for role, outfit, accessory, scene, pose, expression, or crazy level.",
+        description: "Update the visible recipe controls for role, outfit, accessory, pose, expression, or crazy level.",
         inputSchema: configureSchema,
         annotations: { readOnlyHint: false, untrustedContentHint: false },
         execute(input) {
           const next = input || {};
-          ["role", "outfit", "accessory", "scene", "pose", "expression"].forEach((type) => {
+          ["role", "outfit", "accessory", "pose", "expression"].forEach((type) => {
             if (next[type] && catalog[type].some((item) => item.id === next[type])) state[type] = next[type];
           });
           if (typeof next.crazy_level === "number") {
@@ -506,6 +499,7 @@ $("#crazyLevel").addEventListener("input", (event) => {
 });
 
 $("#startProduction").addEventListener("click", startProduction);
+$("#randomRecipe").addEventListener("click", randomizeRecipe);
 $("#saveRecipe").addEventListener("click", () => {
   saveRecipe();
   toast("配方已保存");

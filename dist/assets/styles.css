@@ -163,6 +163,22 @@ h2 {
   border-top: 1px solid rgba(104, 101, 88, 0.18);
 }
 
+.random-button {
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  background: var(--mint);
+  color: var(--ink);
+  font-weight: 950;
+  box-shadow: 4px 4px 0 rgba(29, 28, 23, 0.18);
+}
+
+.random-button:hover {
+  background: var(--yellow);
+}
+
 .group-title {
   display: flex;
   justify-content: space-between;
@@ -255,11 +271,11 @@ input[type="range"] {
 
 .preview-card {
   position: relative;
-  min-height: 620px;
+  min-height: 510px;
   overflow: hidden;
   background:
-    radial-gradient(circle at 22% 18%, rgba(246, 201, 69, 0.26), transparent 28%),
-    radial-gradient(circle at 78% 24%, rgba(135, 168, 216, 0.24), transparent 32%),
+    linear-gradient(120deg, rgba(255, 252, 243, 0.94), rgba(255, 252, 243, 0.64)),
+    linear-gradient(145deg, rgba(246, 201, 69, 0.22), color-mix(in srgb, var(--preview-accent, #1f2025), white 72%)),
     linear-gradient(145deg, #fffdf7 0%, #f3efd9 100%);
 }
 
@@ -292,12 +308,11 @@ input[type="range"] {
   position: relative;
   display: grid;
   place-items: end center;
-  min-height: 500px;
-  padding: 58px 24px 10px;
+  min-height: 380px;
+  padding: 52px 24px 2px;
   isolation: isolate;
 }
 
-.frog-stage::before,
 .result-art::before {
   content: "";
   position: absolute;
@@ -310,25 +325,10 @@ input[type="range"] {
 }
 
 .frog-image {
-  width: min(62%, 330px);
-  max-height: 470px;
+  width: min(44%, 240px);
+  max-height: 350px;
   object-fit: contain;
   filter: drop-shadow(0 24px 28px rgba(29, 28, 23, 0.18));
-}
-
-.costume-band {
-  position: absolute;
-  left: 50%;
-  bottom: 28%;
-  width: min(28%, 150px);
-  height: 17%;
-  transform: translateX(-50%);
-  border: 2px solid rgba(29, 28, 23, 0.18);
-  border-radius: 999px 999px 30px 30px;
-  background: var(--costume, #202020);
-  mix-blend-mode: multiply;
-  opacity: 0.76;
-  pointer-events: none;
 }
 
 .dna-strip {
@@ -377,6 +377,39 @@ input[type="range"] {
 
 .compiler-card {
   padding: 16px;
+}
+
+.api-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 252, 243, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.api-card p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.api-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.api-flow span {
+  min-height: 42px;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border: 1px solid rgba(29, 28, 23, 0.14);
+  border-radius: 6px;
+  background: #fffdf7;
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-align: center;
 }
 
 .icon-button,
@@ -573,21 +606,17 @@ pre {
   display: grid;
   place-items: end center;
   overflow: hidden;
-  background: var(--scene-bg, linear-gradient(145deg, #f8e6ae, #a7dbc1));
+  background:
+    linear-gradient(145deg, rgba(255, 249, 234, 0.94), rgba(255, 249, 234, 0.24)),
+    linear-gradient(145deg, var(--result-accent, #f6c945), #a7dbc1);
   isolation: isolate;
 }
 
 .result-art img {
-  width: 58%;
+  width: 44%;
   height: 86%;
   object-fit: contain;
   filter: drop-shadow(0 18px 18px rgba(29, 28, 23, 0.18));
-}
-
-.result-art .costume-band {
-  bottom: 33%;
-  width: 28%;
-  height: 14%;
 }
 
 .variant-pill {
@@ -679,6 +708,7 @@ pre {
 
   .workspace,
   .control-row,
+  .api-flow,
   .result-grid {
     grid-template-columns: 1fr;
   }
