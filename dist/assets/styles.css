@@ -255,7 +255,7 @@ input[type="range"] {
 
 .preview-card {
   position: relative;
-  min-height: 560px;
+  min-height: 620px;
   overflow: hidden;
   background:
     radial-gradient(circle at 22% 18%, rgba(246, 201, 69, 0.26), transparent 28%),
@@ -293,7 +293,7 @@ input[type="range"] {
   display: grid;
   place-items: end center;
   min-height: 500px;
-  padding: 58px 24px 12px;
+  padding: 58px 24px 10px;
   isolation: isolate;
 }
 
@@ -310,8 +310,8 @@ input[type="range"] {
 }
 
 .frog-image {
-  width: min(88%, 520px);
-  max-height: 460px;
+  width: min(62%, 330px);
+  max-height: 470px;
   object-fit: contain;
   filter: drop-shadow(0 24px 28px rgba(29, 28, 23, 0.18));
 }
@@ -319,9 +319,9 @@ input[type="range"] {
 .costume-band {
   position: absolute;
   left: 50%;
-  bottom: 18%;
-  width: min(38%, 220px);
-  height: 18%;
+  bottom: 28%;
+  width: min(28%, 150px);
+  height: 17%;
   transform: translateX(-50%);
   border: 2px solid rgba(29, 28, 23, 0.18);
   border-radius: 999px 999px 30px 30px;
@@ -346,6 +346,32 @@ input[type="range"] {
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.58);
   font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.reference-board {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 12px;
+  padding: 8px;
+  border: 1px solid rgba(29, 28, 23, 0.14);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.reference-board img {
+  width: 92px;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.reference-board figcaption {
+  color: var(--muted);
+  font-size: 0.84rem;
   font-weight: 850;
 }
 
@@ -552,16 +578,16 @@ pre {
 }
 
 .result-art img {
-  width: 86%;
+  width: 58%;
   height: 86%;
   object-fit: contain;
   filter: drop-shadow(0 18px 18px rgba(29, 28, 23, 0.18));
 }
 
 .result-art .costume-band {
-  bottom: 22%;
-  width: 42%;
-  height: 16%;
+  bottom: 33%;
+  width: 28%;
+  height: 14%;
 }
 
 .variant-pill {

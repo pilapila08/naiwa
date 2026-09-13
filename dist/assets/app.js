@@ -129,13 +129,13 @@ function compilePrompt(recipe = currentRecipe()) {
   return `Keep the identity and body characteristics of the reference Naiwa character unchanged.
 
 Character DNA:
-yellow chubby cartoon creature,
-large round belly,
-large head ratio,
-short limbs,
-small round eyes,
-simple funny mouth,
-consistent iconic silhouette.
+yellow soft 3D creature with a tall rounded pear-shaped body,
+cream oval belly patch,
+green protruding round eyes with dark pupils,
+tiny calm smile,
+long drooping arms,
+dark gradient hands and feet,
+simple smooth silhouette from the provided front, side, and back reference.
 
 Role:
 ${role.prompt}.
@@ -161,6 +161,8 @@ ${crazyPrompt(recipe.crazy_level)}.
 Negative prompt:
 do not alter character identity,
 do not change yellow skin,
+do not remove the cream belly patch,
+do not change the green round eyes,
 do not make realistic frog anatomy,
 no extra characters,
 no text,
