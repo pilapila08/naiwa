@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 启动器运行期产物
+naiwa-launcher-error.log
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

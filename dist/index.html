@@ -3,209 +3,364 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>奶蛙量产工厂</title>
-    <meta
-      name="description"
-      content="围绕固定奶蛙角色 DNA 的 AI 二创配方与量产工作台。"
-    />
+    <title>奶蛙量产工厂客户端</title>
+    <meta name="description" content="奶蛙自动化二创本地客户端。" />
     <link
       rel="icon"
       type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b1b17'/%3E%3Ccircle cx='22' cy='23' r='11' fill='%23ffd84d'/%3E%3Ccircle cx='42' cy='23' r='11' fill='%23ffd84d'/%3E%3Ccircle cx='32' cy='36' r='18' fill='%23ffd84d'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%231b1b17'/%3E%3Ccircle cx='39' cy='25' r='3' fill='%231b1b17'/%3E%3Cpath d='M23 38q9 8 18 0' fill='none' stroke='%231b1b17' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f2bf2f'/%3E%3Ccircle cx='23' cy='23' r='9' fill='%23fff3b4'/%3E%3Ccircle cx='41' cy='23' r='9' fill='%23fff3b4'/%3E%3Ccircle cx='32' cy='39' r='17' fill='%23fff3b4'/%3E%3Ccircle cx='25' cy='26' r='3' fill='%232b2618'/%3E%3Ccircle cx='39' cy='26' r='3' fill='%232b2618'/%3E%3Cpath d='M24 40q8 5 16 0' fill='none' stroke='%232b2618' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E"
     />
     <link rel="stylesheet" href="./assets/styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">AI Character Remix Factory</p>
-          <h1>奶蛙量产工厂</h1>
-        </div>
-        <div class="topbar__stats" aria-label="当前配方指标">
-          <span><strong id="recipeCount">0</strong> 配方</span>
-          <span><strong id="downloadCount">0</strong> 下载</span>
-          <span><strong id="remixCount">0</strong> Remix</span>
-        </div>
-      </header>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#produce" data-nav="produce" aria-label="AutoNaiwa Studio">
+          <span class="brand-icon">奶</span>
+          <span>
+            <strong>AutoNaiwa Studio</strong>
+            <small>本地客户端</small>
+          </span>
+        </a>
 
-      <section class="workspace" aria-label="奶蛙量产工作台">
-        <aside class="panel controls-panel" aria-label="配方选择">
-          <div class="panel__heading">
-            <p class="eyebrow">Recipe</p>
-            <h2>装配二创配方</h2>
-          </div>
-          <button class="random-button" id="randomRecipe" type="button">
-            随机奶蛙
+        <nav class="nav-list" aria-label="页面导航">
+          <button class="nav-item is-active" type="button" data-nav="produce">量产奶蛙</button>
+          <button class="nav-item" type="button" data-nav="gallery">
+            <span>本地图库</span>
+            <b id="galleryBadge">0</b>
           </button>
+          <button class="nav-item" type="button" data-nav="guide">使用说明</button>
+          <button class="nav-item" type="button" data-nav="settings">客户端设置</button>
+        </nav>
+        <div class="client-chip">
+          <strong>客户端模式</strong>
+          <span>Key 与图库保存在本机</span>
+        </div>
+      </aside>
 
-          <div class="control-group">
-            <div class="group-title">
-              <span>职业</span>
-              <small id="roleValue">CEO</small>
+      <main class="canvas">
+        <section class="view is-active" id="view-produce" aria-label="量产奶蛙">
+          <form class="generator-bar" id="productionForm">
+            <div class="client-mode-pill">
+              <strong>本地客户端</strong>
+              <span>浏览器直连</span>
             </div>
-            <div class="option-grid" data-options="role"></div>
-          </div>
-
-          <div class="control-group">
-            <div class="group-title">
-              <span>衣服</span>
-              <small id="outfitValue">黑色西装</small>
-            </div>
-            <div class="option-grid option-grid--dense" data-options="outfit"></div>
-          </div>
-
-          <div class="control-group">
-            <div class="group-title">
-              <span>配饰</span>
-              <small id="accessoryValue">墨镜</small>
-            </div>
-            <div class="option-grid option-grid--dense" data-options="accessory"></div>
-          </div>
-
-          <div class="control-row">
-            <label class="select-label" for="poseSelect">
-              动作
-              <select id="poseSelect"></select>
+            <label class="count-control">
+              <span>生成数量</span>
+              <input id="generationCount" type="number" min="1" max="8" value="3" />
+              <em>只</em>
             </label>
-            <label class="select-label" for="expressionSelect">
-              表情
-              <select id="expressionSelect"></select>
-            </label>
-          </div>
 
-          <div class="range-box">
-            <div class="group-title">
-              <span>抽象程度</span>
-              <small><span id="crazyValue">70</span>/100</small>
-            </div>
-            <input id="crazyLevel" type="range" min="0" max="100" value="70" />
-            <div class="range-legend" aria-hidden="true">
-              <span>稳</span>
-              <span>梗</span>
-              <span>飞</span>
-            </div>
-          </div>
-        </aside>
-
-        <section class="stage" aria-label="角色预览与 Prompt">
-          <div class="preview-card">
-            <div class="factory-badge">
-              <span class="status-dot"></span>
-              角色锁定
-            </div>
-            <div class="frog-stage" id="frogStage">
-              <img
-                src="./assets/naiwa-base.png"
-                alt="黄色长圆身体奶蛙角色基底正面图"
-                class="frog-image"
-              />
-            </div>
-            <div class="dna-strip" aria-label="奶蛙 DNA">
-              <span>黄皮肤</span>
-              <span>米白腹部</span>
-              <span>绿色圆眼</span>
-              <span>深色手脚</span>
-            </div>
-            <figure class="reference-board">
-              <img src="./assets/naiwa-reference-board.jpg" alt="奶蛙角色基底三视图参考" />
-              <figcaption>角色基底三视图</figcaption>
-            </figure>
-          </div>
-
-          <div class="compiler-card">
-            <div class="panel__heading panel__heading--row">
-              <div>
-                <p class="eyebrow">Prompt Compiler</p>
-                <h2>当前编译结果</h2>
+            <div class="recipe-combobox" id="recipeCombobox">
+              <label for="recipeInput">风格偏好（支持自定义输入或点击查看示例列表）</label>
+              <div class="combo-shell">
+                <input
+                  id="recipeInput"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="职业与生活角色"
+                />
+                <button id="togglePresetList" type="button" aria-label="展开示例列表">⌄</button>
               </div>
-              <button class="icon-button" id="copyPrompt" type="button" aria-label="复制 Prompt">
-                Copy
-              </button>
+              <div class="preset-menu" id="presetMenu" hidden></div>
             </div>
-            <pre id="promptOutput"></pre>
-          </div>
 
-          <div class="api-card">
-            <div class="panel__heading">
-              <p class="eyebrow">Image API</p>
-              <h2>接入方式</h2>
+            <button class="start-button" id="startProduction" type="submit">开始量产奶蛙</button>
+          </form>
+
+          <section class="custom-drawer" id="customDrawer" hidden>
+            <div class="drawer-heading">
+              <div>
+                <strong>自定义奶娃</strong>
+                <span id="promptModeHint">一句话会直接进入 Prompt Compiler。</span>
+              </div>
+              <button class="plain-button" id="randomRecipe" type="button">随机奶蛙</button>
             </div>
-            <div class="api-flow">
-              <span>前端 Recipe</span>
-              <span>FastAPI 任务</span>
-              <span>Prompt Compiler</span>
-              <span>生图 Provider</span>
+
+            <div class="mode-switch" role="tablist" aria-label="自定义模式">
+              <button class="is-active" type="button" data-custom-mode="sentence">一句话模式</button>
+              <button type="button" data-custom-mode="structured">分项模式</button>
             </div>
-            <p>
-              前端不要放 API Key，只把配方发到后端。后端读取角色基底图和编译后的 Prompt，
-              调用图片生成或图片编辑接口，拿到图片后存到 R2/S3，再把 URL 返回给结果卡。
-            </p>
+
+            <div class="drawer-grid drawer-grid--base">
+              <div class="reference-box">
+                <img id="referencePreview" src="./assets/naiwa-base.png" alt="奶蛙角色基底" />
+                <label class="upload-button">
+                  <input id="referenceUpload" type="file" accept="image/*" />
+                  更换角色图
+                </label>
+              </div>
+              <label>
+                名字
+                <input id="customName" type="text" value="奶蛙小黄" />
+              </label>
+              <label class="wide-field">
+                抽象程度 <b id="crazyValue">70</b>
+                <input id="crazyLevel" type="range" min="0" max="100" value="70" />
+              </label>
+            </div>
+
+            <div class="custom-mode-panel" id="sentenceModePanel">
+              <label>
+                一句话描述
+                <textarea
+                  id="oneShotPromptInput"
+                  rows="3"
+                  placeholder="例如：一只穿黑色西装、戴墨镜、叉腰坏笑的老板奶蛙，像网络表情包。"
+                ></textarea>
+              </label>
+            </div>
+
+            <div class="custom-mode-panel" id="structuredModePanel" hidden>
+              <div class="structured-fields">
+              <label class="structured-field">
+                <span>职业</span>
+                <div class="field-combo">
+                  <div class="mini-field">
+                    <small>预设</small>
+                    <select id="roleSelect" aria-label="选择职业"></select>
+                  </div>
+                  <div class="mini-field">
+                    <small>自定义</small>
+                    <input id="roleInput" type="text" autocomplete="off" placeholder="自定义职业" />
+                  </div>
+                </div>
+              </label>
+              <label class="structured-field">
+                <span>服装</span>
+                <div class="field-combo">
+                  <div class="mini-field">
+                    <small>预设</small>
+                    <select id="outfitSelect" aria-label="选择服装"></select>
+                  </div>
+                  <div class="mini-field">
+                    <small>自定义</small>
+                    <input id="outfitInput" type="text" autocomplete="off" placeholder="自定义服装" />
+                  </div>
+                </div>
+              </label>
+              <label class="structured-field">
+                <span>配饰</span>
+                <div class="field-combo">
+                  <div class="mini-field">
+                    <small>预设</small>
+                    <select id="accessorySelect" aria-label="选择配饰"></select>
+                  </div>
+                  <div class="mini-field">
+                    <small>自定义</small>
+                    <input id="accessoryInput" type="text" autocomplete="off" placeholder="自定义配饰" />
+                  </div>
+                </div>
+              </label>
+              <label class="structured-field">
+                <span>动作</span>
+                <div class="field-combo">
+                  <div class="mini-field">
+                    <small>预设</small>
+                    <select id="poseSelect" aria-label="选择动作"></select>
+                  </div>
+                  <div class="mini-field">
+                    <small>自定义</small>
+                    <input id="poseInput" type="text" autocomplete="off" placeholder="自定义动作" />
+                  </div>
+                </div>
+              </label>
+              <label class="structured-field">
+                <span>表情</span>
+                <div class="field-combo">
+                  <div class="mini-field">
+                    <small>预设</small>
+                    <select id="expressionSelect" aria-label="选择表情"></select>
+                  </div>
+                  <div class="mini-field">
+                    <small>自定义</small>
+                    <input id="expressionInput" type="text" autocomplete="off" placeholder="自定义表情" />
+                  </div>
+                </div>
+              </label>
+              <label class="structured-field structured-field--wide">
+                <span>补充描述</span>
+                <textarea id="customTrait" rows="3" placeholder="例如：更像表情包、穿雨衣、拿咖啡。"></textarea>
+              </label>
+              </div>
+            </div>
+
+            <div class="prompt-preview">
+              <div class="prompt-preview__top">
+                <strong>Prompt 预览</strong>
+                <button class="plain-button" id="copyPrompt" type="button">复制 Prompt</button>
+              </div>
+              <pre id="promptOutput"></pre>
+            </div>
+          </section>
+
+          <section class="empty-hero" id="emptyHero">
+            <img src="./assets/naiwa-base.png" alt="" />
+            <h1>本地启动，直接量产奶蛙</h1>
+            <p>选数量和风格标签后开始生成；结果会进入当前浏览器的本地图库。</p>
+          </section>
+
+          <section class="queue-board" id="queueBoard" hidden>
+            <div class="queue-grid" id="resultGrid"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-gallery" aria-label="本地图库">
+          <div class="page-card">
+            <div class="page-heading">
+              <div>
+                <p>Local Gallery</p>
+                <h1>本地图库</h1>
+              </div>
+              <button class="plain-button" id="clearGallery" type="button">清空图库</button>
+            </div>
+            <div class="queue-grid" id="galleryGrid"></div>
           </div>
         </section>
 
-        <aside class="panel production-panel" aria-label="量产任务">
-          <div class="panel__heading">
-            <p class="eyebrow">Production Job</p>
-            <h2>黑帮奶蛙 · 4 张</h2>
-          </div>
-
-          <button class="primary-button" id="startProduction" type="button">
-            开始量产
-          </button>
-
-          <div class="job-card" id="jobCard">
-            <div class="job-card__top">
-              <strong id="jobName">等待投产</strong>
-              <span id="jobPercent">0%</span>
-            </div>
-            <div class="progress-track" aria-label="生产进度">
-              <div id="progressBar"></div>
-            </div>
-            <ol class="steps" id="steps"></ol>
-          </div>
-
-          <div class="recipe-card">
-            <div class="panel__heading panel__heading--row">
+        <section class="view" id="view-guide" aria-label="使用说明">
+          <div class="page-card guide-card">
+            <div class="page-heading">
               <div>
-                <p class="eyebrow">Saved Recipe</p>
-                <h2>最近配方</h2>
+                <p>Guide</p>
+                <h1>使用说明</h1>
               </div>
-              <button class="ghost-button" id="saveRecipe" type="button">保存</button>
             </div>
-            <div id="savedRecipes" class="saved-recipes"></div>
+            <article>以后双击“start-naiwa.vbs”，在小窗口里启动本地客户端。</article>
+            <article>先在顶部选择生成数量，再输入一句风格需求，或者点开下拉选择标签。</article>
+            <article>需要精调时，选择“自定义奶娃”展开角色图、服装、动作、表情和描述。</article>
+            <article>生成后的作品可以保存到本地图库，后续复制配方继续 Remix。</article>
           </div>
-        </aside>
-      </section>
+        </section>
 
-      <section class="results-section" aria-label="生成结果">
-        <div class="section-title">
+        <section class="view" id="view-settings" aria-label="客户端设置">
+          <form class="page-card settings-form" id="apiSettingsForm">
+            <div class="page-heading">
+              <div>
+                <p>Client Settings</p>
+                <h1>客户端设置</h1>
+              </div>
+              <span class="api-status" id="apiStatus">模拟模式</span>
+            </div>
+
+            <label>
+              API Key
+              <input id="apiKeyInput" type="password" autocomplete="off" placeholder="sk-..." />
+            </label>
+            <label>
+              Base URL
+              <input id="apiBaseUrlInput" type="url" autocomplete="off" placeholder="https://api.openai.com/v1" />
+            </label>
+            <div class="settings-grid">
+              <label>
+                服务商
+                <select id="apiProviderSelect">
+                  <option value="openai">OpenAI</option>
+                  <option value="compatible">OpenAI 兼容接口</option>
+                  <option value="siliconflow">硅基流动 SiliconFlow</option>
+                  <option value="dashscope">阿里云百炼 Qwen Image</option>
+                  <option value="volcengine">火山方舟 Seedream</option>
+                  <option value="zhipu">智谱 BigModel CogView</option>
+                  <option value="minimax">MiniMax 海螺 Image</option>
+                  <option value="tencent_tokenhub">腾讯 TokenHub 混元</option>
+                </select>
+              </label>
+              <label>
+                模型
+                <input id="apiModelInput" list="apiModelSuggestions" autocomplete="off" placeholder="gpt-image-2" />
+                <datalist id="apiModelSuggestions">
+                  <option value="gpt-image-2"></option>
+                  <option value="gpt-image-2.5-sunburst"></option>
+                  <option value="gpt-image-1.5"></option>
+                  <option value="Qwen/Qwen-Image"></option>
+                  <option value="Qwen/Qwen-Image-Edit-2509"></option>
+                  <option value="Kwai-Kolors/Kolors"></option>
+                  <option value="qwen-image-3.0"></option>
+                  <option value="qwen-image-3.0-pro"></option>
+                  <option value="doubao-seedream-4-0-250828"></option>
+                  <option value="cogview-4-250304"></option>
+                  <option value="glm-image"></option>
+                  <option value="image-01"></option>
+                  <option value="image-01-live"></option>
+                  <option value="hy-image-v3"></option>
+                </datalist>
+              </label>
+              <label>
+                调用模式
+                <select id="apiEndpointSelect">
+                  <option value="edits">图生图 /images/edits</option>
+                  <option value="generations">文生图 /images/generations</option>
+                </select>
+              </label>
+              <label>
+                尺寸
+                <select id="apiSizeSelect">
+                  <option value="1024x1024">1024x1024</option>
+                  <option value="1024x1536">1024x1536</option>
+                  <option value="1536x1024">1536x1024</option>
+                  <option value="auto">auto</option>
+                </select>
+              </label>
+            </div>
+            <p class="provider-note" id="apiProviderNote"></p>
+            <label>
+              质量
+              <select id="apiQualitySelect">
+                <option value="medium">medium</option>
+                <option value="low">low</option>
+                <option value="high">high</option>
+                <option value="auto">auto</option>
+              </select>
+            </label>
+            <label class="switch-row">
+              <input id="useLiveApi" type="checkbox" />
+              <span>启用客户端直连生成</span>
+            </label>
+            <p class="settings-note">
+              Base URL 只填到 /v1，例如 https://api.example.com/v1，不要填完整 /images/generations。
+              “测试连接”只请求 /models，不生成图片；它会把 Key 发给该 Base URL。
+              Key 只保存在当前浏览器会话里；关闭浏览器后需要重新填写。
+            </p>
+            <div class="settings-actions">
+              <button class="start-button" type="submit">保存设置</button>
+              <button class="plain-button" id="testApiConnection" type="button">测试连接</button>
+              <button class="plain-button" id="clearApiSettings" type="button">清空 Key</button>
+            </div>
+            <p class="api-test-result" id="apiTestResult"></p>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskTemplate">
+      <article class="task-card">
+        <header>
           <div>
-            <p class="eyebrow">Results</p>
-            <h2>本次量产结果</h2>
+            <strong></strong>
+            <p></p>
           </div>
-          <p id="resultHint">选择配方或随机奶蛙后开始量产，完成后会出现 4 张可下载结果。</p>
+          <span class="file-pill"></span>
+        </header>
+        <div class="task-preview">
+          <div class="loading-mark">
+            <span></span>
+            <em>客户端正在绘制，请稍候...</em>
+          </div>
+          <img alt="" />
         </div>
-        <div class="result-grid" id="resultGrid"></div>
-      </section>
-    </main>
-
-    <template id="resultTemplate">
-      <article class="result-card">
-        <div class="result-art">
-          <img src="./assets/naiwa-base.png" alt="" />
-          <span class="variant-pill"></span>
-        </div>
-        <div class="result-card__body">
-          <h3></h3>
-          <p></p>
-          <div class="result-actions">
+        <footer>
+          <span class="task-status"></span>
+          <div class="task-actions">
+            <button type="button" data-action="save">保存到本地</button>
+            <button type="button" data-action="remix">复制</button>
             <button type="button" data-action="download">下载</button>
-            <button type="button" data-action="favorite">收藏</button>
-            <button type="button" data-action="remix">复制这只蛙</button>
           </div>
-        </div>
+        </footer>
       </article>
+    </template>
+
+    <template id="emptyTemplate">
+      <div class="empty-gallery">本地图库还没有作品</div>
     </template>
 
     <script src="./assets/app.js"></script>
